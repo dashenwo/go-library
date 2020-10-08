@@ -1,6 +1,7 @@
 github.com/cespare/xxhash/v2 v2.1.1 h1:6MnRN8NT7+YBpUIWxHtefFZOKTAPgGjpQSxqLNn0+qY=
 github.com/cespare/xxhash/v2 v2.1.1/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
-github.com/dashenwo/go-library v1.0.0 h1:/v5Z1X9/IdA0U+Yf9g3upJw/DmNLJ9EAZoqvy3NfRT4=
+github.com/dashenwo/go-library/container v1.0.0 h1:NQiUIu+zX/m2mhvtJSPKokuYH2up/WTkbCZwR1pq3Ho=
+github.com/dashenwo/go-library/container v1.0.0/go.mod h1:jvCvVpeStZwKbuewshZ7YW0Gh4eYixfCQoriddRAIHc=
 github.com/dashenwo/go-library/utils v0.0.0-20201008114607-c5a086391153 h1:QERUpmaLxc8QG6ckbc9KhPQWBAhhow3+FMBXcdt/fh8=
 github.com/dashenwo/go-library/utils v0.0.0-20201008114607-c5a086391153/go.mod h1:0U9WxVL7JFi8muxljNScw8JwMJv0CwZWgLY3+b5RoY8=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
@@ -10,7 +11,6 @@ github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f/go.mod h1:cu
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
 github.com/fsnotify/fsnotify v1.4.9 h1:hsms1Qyu0jgnwNXIxa+/V/PDsU6CfLf6CNO8H7IWoS4=
 github.com/fsnotify/fsnotify v1.4.9/go.mod h1:znqG4EE+3YCdAaPaxE2ZRY/06pZUdp0tY4IgpuI1SZQ=
-github.com/go-redis/redis v6.15.9+incompatible h1:K0pv1D7EQUjfyoMql+r/jZqCLizCGKFlFgcHWWmHQjg=
 github.com/go-redis/redis/v8 v8.2.3 h1:eNesND+DWt/sjQOtPFxAbQkTIXaXX00qNLxjVWkZ70k=
 github.com/go-redis/redis/v8 v8.2.3/go.mod h1:ysgGY09J/QeDYbu3HikWEIPCwaeOkuNoTgKayTEaEOw=
 github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
