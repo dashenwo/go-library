@@ -2,7 +2,7 @@ package hashmap
 
 import (
 	"encoding/json"
-	"github.com/dashenwo/goutils/strings"
+	"github.com/dashenwo/go-library/utils/strings"
 )
 
 // ToJSON outputs the JSON representation of the map.

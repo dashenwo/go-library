@@ -2,8 +2,8 @@ package hashmap
 
 import (
 	"fmt"
-	"github.com/dashenwo/goutils/empty"
-	"github.com/dashenwo/goutils/rwmutex"
+	"github.com/dashenwo/go-library/utils/empty"
+	"github.com/dashenwo/go-library/utils/rwmutex"
 )
 
 // Map holds the elements in go's native map
