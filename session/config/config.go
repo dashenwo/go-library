@@ -31,6 +31,9 @@ type Config struct {
 
 	// SessionIdName specifies the session id name.
 	SessionIdName string
+
+	// SessionSourceName specifies the session source name.
+	SessionSourceName string
 }
 
 func New(opts ...Option) *Config {
@@ -40,6 +43,7 @@ func New(opts ...Option) *Config {
 		CookieDomain:      "",
 		SessionMaxAge:     time.Hour * 24,
 		SessionIdName:     "gosessionid",
+		SessionSourceName: "source",
 	}
 	for _, o := range opts {
 		o(&config)

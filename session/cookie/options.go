@@ -7,14 +7,14 @@ import (
 )
 
 type Options struct {
-	Scheme	string					 //The default cookie is grpc Scheme.
-	Data     map[string]*http.Cookie // Underlying cookie items.
-	Path     string                  // The default cookie path.
-	Domain   string                  // The default cookie domain
-	MaxAge   time.Duration           // The default cookie max age.
-	Config   *config.Config			 // The default cookie session config.
-	Request	 *http.Request			 // Belonged HTTP request.
-	Response http.ResponseWriter	 // Belonged HTTP response
+	Scheme  string                  //The default cookie is grpc Scheme.
+	Data    map[string]*http.Cookie // Underlying cookie items.
+	Path    string                  // The default cookie path.
+	Domain  string                  // The default cookie domain
+	MaxAge  time.Duration           // The default cookie max age.
+	Config  *config.Config          // The default cookie session config.
+	Request *http.Request           // Belonged HTTP request.
+	Writer  http.ResponseWriter     // Belonged HTTP response
 }
 
 type Option func(o *Options)
@@ -67,6 +67,6 @@ func Request(request *http.Request) Option {
 
 func Writer(response http.ResponseWriter) Option {
 	return func(o *Options) {
-		o.Response = response
+		o.Writer = response
 	}
 }

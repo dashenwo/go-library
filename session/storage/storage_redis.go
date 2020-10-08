@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/dashenwo/go-library/container/maps/hashmap"
+	"github.com/dashenwo/go-library/session/encoders"
 	"github.com/go-redis/redis/v8"
 	"log"
 	"time"
@@ -17,12 +18,19 @@ type redisStore struct {
 
 func (r *redisStore) GetSession(id string, ttl time.Duration, data *hashmap.Map) (*hashmap.Map, error) {
 	log.Printf("StorageRedis.GetSession: %s, %v", id, ttl)
+	// lock
+	if err := r.Lock(r.Key(id)); err != nil {
+		return nil, err
+	}
+	defer r.UnLock(r.Key(id))
 	res, err := r.client.Get(r.client.Context(), r.Key(id)).Result()
-	log.Print(res)
 	if err != nil {
 		return nil, err
 	}
-	content := []byte(res)
+	content, err := r.opts.Encoders.Decode(res)
+	if err != nil {
+		return nil, err
+	}
 	if len(content) == 0 {
 		return nil, nil
 	}
@@ -41,6 +49,23 @@ func (r *redisStore) GetSession(id string, ttl time.Duration, data *hashmap.Map)
 	return data, nil
 }
 
+func (r *redisStore) SetSession(id string, data *hashmap.Map, ttl time.Duration) error {
+	log.Printf("StorageRedis.SetSession: %s, %v, %v", id, data, ttl)
+	if err := r.Lock(r.Key(id)); err != nil {
+		return err
+	}
+	defer r.UnLock(r.Key(id))
+	content, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+	if r.opts.Encoders != nil && content != nil {
+		content = []byte(r.opts.Encoders.Encode(content))
+	}
+	_, err = r.client.Set(r.client.Context(), r.Key(id), string(content), ttl).Result()
+	return err
+}
+
 func NewRedisStorage(client redis.UniversalClient, opts ...Option) Storage {
 	// 设置存储驱动
 	s := new(redisStore)
@@ -48,6 +73,7 @@ func NewRedisStorage(client redis.UniversalClient, opts ...Option) Storage {
 		Prefix:       "session",
 		MaxLockWait:  30,
 		SpinLockWait: 150,
+		Encoders:     encoders.DefaultEncoders,
 	}
 	s.client = client
 	for _, o := range opts {
@@ -62,21 +88,17 @@ func (r *redisStore) Init(opts ...Option) error {
 	for _, o := range opts {
 		o(&r.opts)
 	}
-	// 创建存储驱动
-	if r.client == nil {
-		return r.configure()
-	}
-	return nil
-}
-
-// 配置信息
-func (r *redisStore) configure() error {
-
 	return nil
 }
 
 func (r *redisStore) Key(id string) string {
-	return r.opts.Prefix + id
+	return r.opts.Prefix + ":" + id
+}
+
+// Set sets key-value session pair to the storage.
+// The parameter <ttl> specifies the TTL for the session id (not for the key-value pair).
+func (r *redisStore) Set(id string, key string, value interface{}, ttl time.Duration) error {
+	return ErrorDisabled
 }
 
 func (r *redisStore) Lock(key string) error {
@@ -98,24 +120,14 @@ func (r *redisStore) UnLock(key string) error {
 	return r.client.Del(context.Background(), lockKey).Err()
 }
 
-func (r *redisStore) Get(key string) ([]byte, error) {
-	// 循环拿到锁
-	err := r.Lock(key)
-	if err != nil {
-		return nil, err
+func (r *redisStore) UpdateTTL(id string, ttl time.Duration) error {
+	log.Printf("StorageRedis.UpdateTTL: %s, %v", id, ttl)
+	if err := r.Lock(r.Key(id)); err != nil {
+		return err
 	}
-	b, e := r.client.Get(context.Background(), key).Bytes()
-	// 操作完毕解锁
-	r.UnLock(key)
-	if e != nil {
-		return nil, e
-	}
-	return b, e
-}
-
-func (r *redisStore) Set(key string, value interface{}) error {
-
-	return nil
+	defer r.UnLock(r.Key(id))
+	_, err := r.client.Expire(r.client.Context(), r.Key(id), ttl).Result()
+	return err
 }
 
 func (r *redisStore) Options() Options {

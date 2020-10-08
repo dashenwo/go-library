@@ -5,36 +5,58 @@ import (
 	"time"
 )
 
-type noopStore struct{}
+type noopStore struct {
+	opts Options
+}
 
-func (r *noopStore) Init(opts ...Option) error {
-	return nil
+func (r *noopStore) Set(id string, key string, value interface{}, ttl time.Duration) error {
+	return ErrorDisabled
 }
 
 func (r *noopStore) GetSession(id string, ttl time.Duration, data *hashmap.Map) (*hashmap.Map, error) {
+
+	panic("implement me")
+}
+
+func (r *noopStore) UpdateTTL(id string, ttl time.Duration) error {
+	panic("implement me")
+}
+
+func (r *noopStore) Init(option ...Option) error {
 	panic("implement me")
 }
 
 func (r *noopStore) Key(id string) string {
-	return ""
+	panic("implement me")
 }
 
 func (r *noopStore) Lock(key string) error {
-	return nil
+	panic("implement me")
 }
 
 func (r *noopStore) UnLock(key string) error {
-	return nil
-}
-
-func (r *noopStore) Get(key string) ([]byte, error) {
-	return nil, nil
-}
-
-func (r *noopStore) Set(key string, value interface{}) error {
-	return nil
+	panic("implement me")
 }
 
 func (r *noopStore) Options() Options {
-	return Options{}
+	panic("implement me")
+}
+
+func (r *noopStore) SetSession(id string, data *hashmap.Map, ttl time.Duration) error {
+	panic("implement me")
+}
+
+func NewDefaultStorage(opts ...Option) Storage {
+	// 设置存储驱动
+	s := new(noopStore)
+	options := Options{
+		Prefix:       "session",
+		MaxLockWait:  30,
+		SpinLockWait: 150,
+	}
+	for _, o := range opts {
+		o(&options)
+	}
+	s.opts = options
+	return s
 }

@@ -10,6 +10,8 @@ type Cookie interface {
 	Options() Options
 	// Map the cookie init.
 	Init(opts ...Option)
+	// 检测是否已经准备就绪，因为需要request和responseWriter
+	IsOk() bool
 	// Map returns the cookie items as map[string]string.
 	Map() map[string]string
 	// Contains checks if given key exists and not expired in cookie.
@@ -21,9 +23,15 @@ type Cookie interface {
 	// which is usually empty.
 	SetCookie(key, value, domain, path string, maxAge time.Duration, httpOnly ...bool)
 	// SetHttpCookie sets cookie with *http.Cookie.
-	SetHttpCookie(cookie http.Cookie)
+	SetHttpCookie(cookie *http.Cookie)
 	// GetSessionId retrieves and returns the session id from cookie.
 	GetSessionId() string
 	// SetSessionId sets session id in the cookie.
 	SetSessionId(id string)
+	// GetSessionId retrieves and returns the session source from cookie.
+	GetSessionSource() string
+	// SetSessionId sets session id in the cookie.
+	SetSessionSource(source string)
+	// Flush outputs the cookie items to client.
+	Flush()
 }
